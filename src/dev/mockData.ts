@@ -1,0 +1,148 @@
+import type { NetworkRequest } from '../shared/types'
+
+export const mockRequests: NetworkRequest[] = [
+  {
+    id: '1',
+    timestamp: Date.now() - 5000,
+    method: 'GET',
+    url: 'https://api.example.com/users?page=1&limit=10',
+    requestHeaders: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    },
+    requestBody: null,
+    status: 200,
+    statusText: 'OK',
+    responseHeaders: {
+      'Content-Type': 'application/json',
+      'X-Request-Id': 'abc123',
+      'Cache-Control': 'no-cache',
+    },
+    responseBody: JSON.stringify({
+      users: [
+        { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin' },
+        { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user' },
+        { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'user' },
+      ],
+      pagination: {
+        page: 1,
+        limit: 10,
+        total: 3,
+        hasMore: false,
+      },
+    }),
+    duration: 145,
+    type: 'fetch',
+    state: 'completed',
+  },
+  {
+    id: '2',
+    timestamp: Date.now() - 3000,
+    method: 'POST',
+    url: 'https://api.example.com/users',
+    requestHeaders: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    },
+    requestBody: JSON.stringify({
+      name: 'New User',
+      email: 'newuser@example.com',
+      password: '********',
+    }),
+    status: 201,
+    statusText: 'Created',
+    responseHeaders: {
+      'Content-Type': 'application/json',
+      'Location': '/users/4',
+    },
+    responseBody: JSON.stringify({
+      id: 4,
+      name: 'New User',
+      email: 'newuser@example.com',
+      role: 'user',
+      createdAt: '2024-01-22T12:00:00Z',
+    }),
+    duration: 234,
+    type: 'fetch',
+    state: 'completed',
+  },
+  {
+    id: '3',
+    timestamp: Date.now() - 2000,
+    method: 'DELETE',
+    url: 'https://api.example.com/users/2',
+    requestHeaders: {
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    },
+    requestBody: null,
+    status: 204,
+    statusText: 'No Content',
+    responseHeaders: {},
+    responseBody: null,
+    duration: 89,
+    type: 'xhr',
+    state: 'completed',
+  },
+  {
+    id: '4',
+    timestamp: Date.now() - 1000,
+    method: 'GET',
+    url: 'https://api.example.com/posts/not-found',
+    requestHeaders: {
+      'Accept': 'application/json',
+    },
+    requestBody: null,
+    status: 404,
+    statusText: 'Not Found',
+    responseHeaders: {
+      'Content-Type': 'application/json',
+    },
+    responseBody: JSON.stringify({
+      error: 'Not Found',
+      message: 'The requested resource could not be found',
+      statusCode: 404,
+    }),
+    duration: 56,
+    type: 'fetch',
+    state: 'completed',
+  },
+  {
+    id: '5',
+    timestamp: Date.now() - 500,
+    method: 'PUT',
+    url: 'https://api.example.com/users/1',
+    requestHeaders: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    },
+    requestBody: JSON.stringify({
+      name: 'John Doe Updated',
+      email: 'john.updated@example.com',
+    }),
+    status: 500,
+    statusText: 'Internal Server Error',
+    responseHeaders: {
+      'Content-Type': 'application/json',
+    },
+    responseBody: JSON.stringify({
+      error: 'Internal Server Error',
+      message: 'Database connection failed',
+      statusCode: 500,
+    }),
+    duration: 1234,
+    type: 'fetch',
+    state: 'completed',
+  },
+  {
+    id: '6',
+    timestamp: Date.now(),
+    method: 'GET',
+    url: 'https://api.example.com/data/loading',
+    requestHeaders: {
+      'Accept': 'application/json',
+    },
+    requestBody: null,
+    type: 'fetch',
+    state: 'pending',
+  },
+]
