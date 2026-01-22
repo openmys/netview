@@ -176,8 +176,6 @@ function JsonNode({
     }
   }, [searchText, hasSearchMatch, value])
 
-  const indent = depth * 16
-
   const keyStyle: React.CSSProperties = {
     color: '#6366f1',
     marginRight: '4px',
@@ -300,7 +298,7 @@ function JsonNode({
             <>
               <div>
                 {visibleItems.map((item, index) => (
-                  <div key={index} style={{ paddingLeft: `${indent + 16}px` }}>
+                  <div key={index} style={{ paddingLeft: '16px' }}>
                     <JsonNode
                       value={item}
                       depth={depth + 1}
@@ -312,7 +310,7 @@ function JsonNode({
                   </div>
                 ))}
                 {hasMore && (
-                  <div style={{ paddingLeft: `${indent + 16}px` }}>
+                  <div style={{ paddingLeft: '16px' }}>
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -334,7 +332,7 @@ function JsonNode({
                   </div>
                 )}
               </div>
-              <span style={{ ...punctuationStyle, paddingLeft: `${indent}px` }}>]</span>
+              <div><span style={punctuationStyle}>]</span></div>
             </>
           )}
           {!isExpanded && <span style={punctuationStyle}>]</span>}
@@ -375,7 +373,7 @@ function JsonNode({
             <>
               <div>
                 {entries.map(([key, val], index) => (
-                  <div key={key} style={{ paddingLeft: `${indent + 16}px` }}>
+                  <div key={key} style={{ paddingLeft: '16px' }}>
                     <JsonNode
                       keyName={key}
                       value={val}
@@ -388,7 +386,7 @@ function JsonNode({
                   </div>
                 ))}
               </div>
-              <span style={{ ...punctuationStyle, paddingLeft: `${indent}px` }}>{'}'}</span>
+              <div><span style={punctuationStyle}>{'}'}</span></div>
             </>
           )}
           {!isExpanded && <span style={punctuationStyle}>{'}'}</span>}
