@@ -332,10 +332,10 @@ function JsonNode({
                   </div>
                 )}
               </div>
-              <div><span style={punctuationStyle}>]</span></div>
+              <span style={{ ...punctuationStyle, display: 'block' }}>]{!isLast && ','}</span>
             </>
           )}
-          {!isExpanded && <span style={punctuationStyle}>]</span>}
+          {!isExpanded && <span style={punctuationStyle}>]{!isLast && ','}</span>}
         </span>
       )
     }
@@ -386,10 +386,10 @@ function JsonNode({
                   </div>
                 ))}
               </div>
-              <div><span style={punctuationStyle}>{'}'}</span></div>
+              <span style={{ ...punctuationStyle, display: 'block' }}>{'}'}{!isLast && ','}</span>
             </>
           )}
-          {!isExpanded && <span style={punctuationStyle}>{'}'}</span>}
+          {!isExpanded && <span style={punctuationStyle}>{'}'}{!isLast && ','}</span>}
         </span>
       )
     }
@@ -416,7 +416,7 @@ function JsonNode({
         </>
       )}
       {renderValue()}
-      {!isLast && <span style={punctuationStyle}>,</span>}
+      {!isLast && typeof value !== 'object' && <span style={punctuationStyle}>,</span>}
     </div>
   )
 }
