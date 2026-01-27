@@ -163,6 +163,11 @@ const methodColors: Record<string, string> = {
   HEAD: '#6b7280',
 }
 
+const sourceColors: Record<string, string> = {
+  client: '#3b82f6',  // 파란색
+  server: '#8b5cf6',  // 보라색
+}
+
 const getStatusColor = (status?: number): string => {
   if (!status) return '#71717a'
   if (status >= 200 && status < 300) return '#22c55e'
@@ -338,6 +343,22 @@ export default function RequestItem({
             <path d="M9 18l6-6-6-6" />
           </svg>
 
+          {/* Source badge */}
+          <span
+            style={{
+              padding: '2px 6px',
+              borderRadius: '4px',
+              fontSize: '9px',
+              fontWeight: 600,
+              background: sourceColors[request.source] + '20',
+              color: sourceColors[request.source],
+              textTransform: 'uppercase',
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+          >
+            {request.source}
+          </span>
+
           <span style={methodBadgeStyle}>{request.method}</span>
 
           <span
@@ -367,17 +388,6 @@ export default function RequestItem({
               </span>
             </>
           )}
-
-          {/* Type indicator */}
-          <span
-            style={{
-              fontSize: '9px',
-              color: '#52525b',
-              textTransform: 'uppercase',
-            }}
-          >
-            {request.type}
-          </span>
 
           {/* Detail view button */}
           {onSearchClick && (
