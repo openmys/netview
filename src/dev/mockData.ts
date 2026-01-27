@@ -33,6 +33,7 @@ export const mockRequests: NetworkRequest[] = [
     }),
     duration: 145,
     type: 'fetch',
+    source: 'client',
     state: 'completed',
   },
   {
@@ -64,6 +65,7 @@ export const mockRequests: NetworkRequest[] = [
     }),
     duration: 234,
     type: 'fetch',
+    source: 'client',
     state: 'completed',
   },
   {
@@ -81,6 +83,7 @@ export const mockRequests: NetworkRequest[] = [
     responseBody: null,
     duration: 89,
     type: 'xhr',
+    source: 'client',
     state: 'completed',
   },
   {
@@ -104,6 +107,7 @@ export const mockRequests: NetworkRequest[] = [
     }),
     duration: 56,
     type: 'fetch',
+    source: 'server',
     state: 'completed',
   },
   {
@@ -131,6 +135,7 @@ export const mockRequests: NetworkRequest[] = [
     }),
     duration: 1234,
     type: 'fetch',
+    source: 'server',
     state: 'completed',
   },
   {
@@ -143,6 +148,7 @@ export const mockRequests: NetworkRequest[] = [
     },
     requestBody: null,
     type: 'fetch',
+    source: 'client',
     state: 'pending',
   },
 ]

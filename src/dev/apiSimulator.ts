@@ -163,6 +163,7 @@ function generateRequest(): NetworkRequest {
       responseBody: JSON.stringify(responseBody),
       duration,
       type: Math.random() > 0.3 ? 'fetch' : 'xhr',
+      source: Math.random() > 0.5 ? 'client' : 'server',
       state: 'completed',
     }
   } else {
@@ -183,6 +184,7 @@ function generateRequest(): NetworkRequest {
       responseBody: JSON.stringify({ ...error.body, requestId: id }),
       duration,
       type: Math.random() > 0.3 ? 'fetch' : 'xhr',
+      source: Math.random() > 0.5 ? 'client' : 'server',
       state: 'completed',
     }
   }
