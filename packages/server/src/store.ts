@@ -3,6 +3,12 @@ import type { ServerFetchLog, SessionBuffer, NetViewOptions } from './types'
 const DEFAULT_MAX_LOGS = 100
 const DEFAULT_TTL_SECONDS = 60
 
+// globalThis에 타입 선언 (Next.js webpack 번들링 대응)
+declare global {
+  // eslint-disable-next-line no-var
+  var __netviewStore: SessionStore | undefined
+}
+
 class SessionStore {
   private sessions = new Map<string, SessionBuffer>()
   private maxLogsPerSession: number
@@ -87,20 +93,17 @@ class SessionStore {
   }
 }
 
-// 싱글톤 인스턴스
-let storeInstance: SessionStore | null = null
-
 export function getStore(): SessionStore {
-  if (!storeInstance) {
+  if (!globalThis.__netviewStore) {
     throw new Error('NetView store not initialized. Call registerNetView() first.')
   }
-  return storeInstance
+  return globalThis.__netviewStore
 }
 
 export function initStore(options: NetViewOptions): SessionStore {
-  if (storeInstance) {
-    storeInstance.destroy()
+  if (globalThis.__netviewStore) {
+    globalThis.__netviewStore.destroy()
   }
-  storeInstance = new SessionStore(options)
-  return storeInstance
+  globalThis.__netviewStore = new SessionStore(options)
+  return globalThis.__netviewStore
 }

@@ -29,7 +29,7 @@ const initSession = (): string => {
 
 // SSE로 서버 fetch 로그 수신
 const connectServerStream = (sessionId: string): void => {
-  const url = `${location.origin}/api/__netview/stream?session=${sessionId}`
+  const url = `${location.origin}/api/netview/stream?session=${sessionId}`
 
   const eventSource = new EventSource(url)
 

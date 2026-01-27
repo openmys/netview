@@ -4,7 +4,11 @@ import type { NetViewOptions, ServerFetchLog } from './types'
 
 const COOKIE_NAME = '__netview_session'
 
-let isRegistered = false
+// globalThis에 타입 선언 (Next.js webpack 번들링 대응)
+declare global {
+  // eslint-disable-next-line no-var
+  var __netviewRegistered: boolean | undefined
+}
 
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
@@ -29,7 +33,7 @@ async function getSessionId(): Promise<string | null> {
 }
 
 export function registerNetView(options: NetViewOptions = {}): void {
-  if (isRegistered) {
+  if (globalThis.__netviewRegistered) {
     if (options.debug) {
       console.log('[NetView] Already registered, skipping')
     }
@@ -159,7 +163,7 @@ export function registerNetView(options: NetViewOptions = {}): void {
     }
   }
 
-  isRegistered = true
+  globalThis.__netviewRegistered = true
 
   if (options.debug) {
     console.log('[NetView] Registered successfully')
