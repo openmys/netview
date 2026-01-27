@@ -1,13 +1,79 @@
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'jotai'
 import App from '../panel/App'
-import type { InterceptorMessage, NetworkRequest } from '../shared/types'
+import type { InterceptorMessage, NetworkRequest, HttpMethod } from '../shared/types'
 import { requestsAtom } from '../panel/stores/atoms'
 import { createStore } from 'jotai'
 import osCss from 'overlayscrollbars/overlayscrollbars.css?inline'
 
 // Create Jotai store for external updates
 const store = createStore()
+
+const NETVIEW_SESSION_COOKIE = '__netview_session'
+
+// 세션 ID 생성 및 쿠키 설정
+const initSession = (): string => {
+  // 기존 세션 ID 확인
+  const existingMatch = document.cookie.match(
+    new RegExp(`(?:^|;\\s*)${NETVIEW_SESSION_COOKIE}=([^;]*)`)
+  )
+  if (existingMatch) {
+    return existingMatch[1]
+  }
+
+  // 새 세션 ID 생성
+  const sessionId = crypto.randomUUID()
+  document.cookie = `${NETVIEW_SESSION_COOKIE}=${sessionId}; path=/; SameSite=Lax`
+  return sessionId
+}
+
+// SSE로 서버 fetch 로그 수신
+const connectServerStream = (sessionId: string): void => {
+  const url = `${location.origin}/api/__netview/stream?session=${sessionId}`
+
+  const eventSource = new EventSource(url)
+
+  eventSource.onmessage = (event) => {
+    try {
+      const log = JSON.parse(event.data)
+
+      // 에러 메시지인 경우 무시
+      if (log.error) {
+        console.debug('[NetView] Server stream error:', log.error)
+        return
+      }
+
+      // 서버 fetch 로그를 NetworkRequest로 변환
+      const request: NetworkRequest = {
+        id: `server-${log.id}`,
+        timestamp: log.timestamp,
+        method: log.method as HttpMethod,
+        url: log.url,
+        requestHeaders: log.requestHeaders,
+        requestBody: log.requestBody,
+        status: log.status,
+        statusText: log.statusText,
+        responseHeaders: log.responseHeaders,
+        responseBody: log.responseBody,
+        duration: log.duration,
+        type: 'fetch',
+        source: 'server',
+        state: log.error ? 'error' : 'completed',
+        error: log.error,
+      }
+
+      const currentRequests = store.get(requestsAtom)
+      store.set(requestsAtom, [...currentRequests, request])
+    } catch (e) {
+      console.debug('[NetView] Failed to parse server log:', e)
+    }
+  }
+
+  eventSource.onerror = () => {
+    // 서버에 netview-server가 설치되지 않은 경우 조용히 연결 종료
+    eventSource.close()
+  }
+}
 
 // Inject the interceptor script into page context
 const injectInterceptor = (): void => {
@@ -33,6 +99,7 @@ const handleMessage = (event: MessageEvent<InterceptorMessage>): void => {
       requestHeaders: payload.requestHeaders || {},
       requestBody: payload.requestBody || null,
       type: payload.type!,
+      source: 'client',
       state: 'pending',
     }
 
@@ -122,13 +189,21 @@ const mountPanel = (): void => {
 
 // Initialize
 const init = (): void => {
+  // 세션 초기화
+  const sessionId = initSession()
+
   injectInterceptor()
   window.addEventListener('message', handleMessage)
 
   if (document.body) {
     mountPanel()
+    // SSE 연결 (패널 마운트 후)
+    connectServerStream(sessionId)
   } else {
-    document.addEventListener('DOMContentLoaded', mountPanel)
+    document.addEventListener('DOMContentLoaded', () => {
+      mountPanel()
+      connectServerStream(sessionId)
+    })
   }
 }
 
