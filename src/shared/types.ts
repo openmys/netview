@@ -2,6 +2,8 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS'
 
 export type RequestState = 'pending' | 'completed' | 'error'
 
+export type RequestSource = 'client' | 'server'
+
 export interface NetworkRequest {
   id: string
   timestamp: number
@@ -21,6 +23,7 @@ export interface NetworkRequest {
   // Meta
   duration?: number
   type: 'fetch' | 'xhr'
+  source: RequestSource  // 'client' | 'server'
   state: RequestState
   error?: string
 }
