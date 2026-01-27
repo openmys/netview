@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { initStore, getStore } from './store'
+import { initStore } from './store'
 import type { NetViewOptions, ServerFetchLog } from './types'
 
 const COOKIE_NAME = '__netview_session'

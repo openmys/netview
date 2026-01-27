@@ -26,7 +26,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       try {
         const store = getStore()
         unsubscribe = store.subscribe(sessionId, send)
-      } catch (error) {
+      } catch {
         // 스토어가 초기화되지 않은 경우
         const errorMsg = `data: ${JSON.stringify({ error: 'NetView not initialized' })}\n\n`
         controller.enqueue(encoder.encode(errorMsg))
